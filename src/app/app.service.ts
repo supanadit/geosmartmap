@@ -1,22 +1,26 @@
-import {Injectable} from '@angular/core';
-import {LocationModel, locationModelFromEventSource, markerListFromLocationModel} from './model/location';
-import {Observable} from 'rxjs';
-import {environment} from '../environments/environment';
-import {Marker} from 'leaflet';
+import { Injectable } from '@angular/core';
+import { Marker } from 'leaflet';
+import { Observable } from 'rxjs';
+import {
+  LocationModel,
+  locationModelFromEventSource,
+  markerListFromLocationModel,
+} from './model/location';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppService {
-  constructor() {
-
-  }
+  constructor() {}
 
   getStreamUser(): Observable<Array<Marker>> {
-    return new Observable(observer => {
-      const source = new EventSource(environment.api.concat('/point/get/stream'));
-      source.addEventListener('message', message => {
-        const listLocationModel: Array<LocationModel> = locationModelFromEventSource(message);
+    return new Observable((observer) => {
+      const source = new EventSource(
+        'https://api.geosmart.supanadit.com/point/get/stream'
+      );
+      source.addEventListener('message', (message) => {
+        const listLocationModel: Array<LocationModel> =
+          locationModelFromEventSource(message);
         observer.next(markerListFromLocationModel(listLocationModel));
       });
     });
